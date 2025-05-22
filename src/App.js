@@ -1,24 +1,147 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useState } from "react";
+// import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 function App() {
+  const toggleKeyName = () => {
+    var keyFormat = document.getElementById('keySigBtn');
+    if(keyFormat.textContent === 'Flats'){
+      keyFormat.textContent = 'Sharps';
+      document.getElementById('keyDis1').textContent = 'G#';
+      document.getElementById('keyDis3').textContent = 'A#';
+      document.getElementById('keyDis6').textContent = 'C#';
+      document.getElementById('keyDis8').textContent = 'D#';
+      document.getElementById('keyDis11').textContent = 'F#';
+    }
+    else{
+      keyFormat.textContent = 'Flats';
+      document.getElementById('keyDis1').textContent = 'Ab';
+      document.getElementById('keyDis3').textContent = 'Bb';
+      document.getElementById('keyDis6').textContent = 'Db';
+      document.getElementById('keyDis8').textContent = 'Eb';
+      document.getElementById('keyDis11').textContent = 'Gb';
+    }
+  };
+
+  // const Slider = () => {
+  const [tempoValue, setTempoValue] = useState(80); // Default value
+  const [lodValue, setLodValue] = useState(0);
+  
+  
+  // };
+  const handleTempoChange = (event) => {
+    setTempoValue(event.target.value);
+  };
+
+  const handleLodChange = (event) => {
+    setLodValue(event.target.value);
+  };
+
+  const [selectedPlaylistOption, setSelectedPlaylistOption] = useState("");
+
+  const handlePlaylistChange = (event) => {
+    setSelectedPlaylistOption(event.target.value);
+  };
+
+
   return (
     <div className="App">
+      <h2>Guess That Song (Front End UI)</h2>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <div className='App-container'>
+      <div className='left-side'>
+        <div className='Key-Sig-Label'>
+        <h5>Key Signature: </h5>
+        <input type="radio" id="key1" name="key" value="1"></input>
+        <label id='keyDis1' for="key1">Ab</label><br></br>
+        <input type="radio" id="key2" name="key" value="2"></input>
+        <label id='keyDis2' for="key2">A</label><br></br>
+        <input type="radio" id="key3" name="key" value="3"></input>
+        <label id='keyDis3' for="key3">Bb</label><br></br>
+        <input type="radio" id="key4" name="key" value="4"></input>
+        <label id='keyDis4' for="key4">B</label><br></br>
+        <input type="radio" id="key5" name="key" value="5"></input>
+        <label id='keyDis5' for="key5">C</label><br></br>
+        <input type="radio" id="key6" name="key" value="6"></input>
+        <label id='keyDis6' for="key6">Db</label><br></br>
+        <input type="radio" id="key7" name="key" value="7"></input>
+        <label id='keyDis7' for="key7">D</label><br></br>
+        <input type="radio" id="key8" name="key" value="8"></input>
+        <label id='keyDis8' for="key8">Eb</label><br></br>
+        <input type="radio" id="key9" name="key" value="9"></input>
+        <label id='keyDis9' for="key9">E</label><br></br>
+        <input type="radio" id="key10" name="key" value="10"></input>
+        <label id='keyDis10' for="key10">F</label><br></br>
+        <input type="radio" id="key11" name="key" value="11"></input>
+        <label id='keyDis11' for="key11">Gb</label><br></br>
+        <input type="radio" id="key12" name="key" value="12"></input>
+        <label id='keyDis12' for="key12">G</label><br></br>
+        </div>
+
+        <div className='Key-Dis'>
+        <h5>Key Signature (Display): </h5>
+        <button id='keySigBtn' onClick={toggleKeyName}>Flats</button>
+        </div>
+
+        <div className='Tempo'>
+        <h5>Tempo: </h5>
+        <input id='Tempo-slider' type="range" min="80" max="150" value={tempoValue}
+        onChange={handleTempoChange}></input>
+        <p>{tempoValue}</p>
+        </div>
+
+        <div className='Lod'>
+        <h5>Level of Difficulty: </h5>
+        <input id='Lod-slider' type="range" min="0" max="12" value={lodValue}
+        onChange={handleLodChange}></input>
+        <p>{lodValue}</p>
+        </div>
+
+        <div className='Playlist'>
+         <label htmlFor="dropdown">Playlist: </label>
+            <select id="dropdown" value={selectedPlaylistOption} onChange={handlePlaylistChange}>
+                <option value="" disabled>Select...</option>
+                <option value="playlist1">Playlist 1</option>
+                <option value="playlist2">Playlist 2</option>
+                <option value="playlist3">Playlist 3</option>
+            </select>
+        </div>
+
+        <br></br>
+        <div className='Player'>
+        <h5>Player: </h5>
+          <Stack spacing={40} direction="row">
+          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success'>Play</Button>
+          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success'>Pause</Button>
+          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success'>Restart</Button>
+          </Stack>
+        </div> 
+      </div>
+      <div className='right-side'>
+        <div className='Guess'>
+          <h5>Guess: </h5>
+          <TextField id='guessTextField' fullWidth label="Put your guess here" color="success" focused />
+        </div>
+        
+        <div className='Submit'>
+          <h5>Submit: </h5>
+          <Button variant="contained" size='large' color='success'>Submit</Button>
+        </div>
+        
+      </div>
+
+
+      </div>
       </header>
     </div>
+    
   );
 }
 

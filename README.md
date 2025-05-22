@@ -4,6 +4,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+NOTE: The following commands need to be ran to run the application:
+
+### `npm install @emotion/react`
+### `npm install react-bootstrap`
+### `npm install @mui/material`
+### `npm install @mui/icons-material`
+
 In the project directory, you can run:
 
 ### `npm start`
