@@ -127,13 +127,19 @@ function App() {
       <div className='right-side'>
         <div className='Guess'>
           <h5>Guess: </h5>
+          
+        </div>
+        <div>
           <TextField id='guessTextField' fullWidth label="Put your guess here" color="success" focused />
         </div>
-        
+        <br></br>
         <div className='Submit'>
           <h5>Submit: </h5>
-          <Button variant="contained" size='large' color='success'>Submit</Button>
         </div>
+        <div>
+        <Button variant="contained" size='large' color='success'>Submit</Button>
+        </div>
+        
         
       </div>
 
