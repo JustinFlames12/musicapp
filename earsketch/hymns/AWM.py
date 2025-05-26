@@ -1,11 +1,11 @@
-# description: Plays Mary Had A Little Lamb
+# description: Plays Abide With Me
 from earsketch import *
 
 import random
 import math
 
 # Make variable for song name
-song_name = 'Mary Had A Little Lamb'
+song_name = 'Abide With Me'
 
 # Set up tempo (between 80 and 150 inclusively)
 tempo = 150
@@ -29,7 +29,7 @@ clap_instrument = JUSTINSAHEFIL1092_CLAP_AT_TWO_CHURCH_1_WAV
 # Note: the last parameter for the setEffect used below must
 # stay between -12 and 12.
 # So: this means the key variable must stay between -12 and 3
-key = 0
+key = -2
 
 # Set up level of difficulty (between 0 and 12 inclusively)
 lod = 0
@@ -39,9 +39,12 @@ setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
 setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
 setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
 setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 9 + key) #D
+setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+setEffect(7, PITCHSHIFT, PITCHSHIFT_SHIFT, 6 + key) #B
 
 # Set up number of notes used in song
-num_notes = 4
+num_notes = 7
 
 # Set up number of notes to keep based on level of difficulty
 if lod != 0:
@@ -80,30 +83,45 @@ def play_note(track: int, beat: float):
     else:
         fitMedia(melody_instrument, track, current_place, current_place + beat)
         current_place = current_place + beat
+
 # Play the song
-play_note(1, quarter_note)
-play_note(2, quarter_note)
-play_note(3, quarter_note)
-play_note(2, quarter_note)
-play_note(1, quarter_note)
-play_note(1, quarter_note)
 play_note(1, half_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
-play_note(2, half_note)
-play_note(1, quarter_note)
-play_note(4, quarter_note)
-play_note(4, half_note)
-play_note(1, quarter_note)
-play_note(2, quarter_note)
-play_note(3, quarter_note)
-play_note(2, quarter_note)
-play_note(1, quarter_note)
-play_note(1, quarter_note)
-play_note(1, quarter_note)
-play_note(1, quarter_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
 play_note(1, quarter_note)
 play_note(2, quarter_note)
 play_note(3, half_note)
+play_note(4, half_note)
+play_note(5, quarter_note)
+play_note(4, quarter_note)
+play_note(4, quarter_note)
+play_note(6, quarter_note)
+play_note(1, whole_note)
+play_note(1, half_note)
+play_note(6, quarter_note)
+play_note(4, quarter_note)
+play_note(5, half_note)
+play_note(4, half_note)
+play_note(6, quarter_note)
+play_note(2, quarter_note)
+play_note(1, quarter_note)
+play_note(7, quarter_note)
+play_note(4, whole_note)
+play_note(1, half_note)
+play_note(1, quarter_note)
+play_note(2, quarter_note)
+play_note(3, half_note)
+play_note(4, half_note)
+play_note(4, quarter_note)
+play_note(6, quarter_note)
+play_note(6, quarter_note)
+play_note(1, quarter_note)
+play_note(2, whole_note)
+play_note(2, half_note)
+play_note(1, quarter_note)
+play_note(6, quarter_note)
+play_note(1, quarter_note)
+play_note(2, quarter_note)
+play_note(3, quarter_note)
+play_note(6, quarter_note)
+play_note(1, half_note)
+play_note(2, half_note)
+play_note(3, whole_note)

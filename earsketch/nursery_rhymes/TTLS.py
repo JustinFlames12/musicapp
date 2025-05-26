@@ -72,10 +72,16 @@ def play_note(track: int, beat: float):
     global melody_instrument
     global clap_instrument
     if track in random_track_numbers:
-        fitMedia(clap_instrument, track, current_place, current_place + beat)
+        if beat == 1.0: # If beat is a whole note
+            # Play clap for half note and add in half rest
+            fitMedia(clap_instrument, track, current_place, current_place + 0.5)
+            current_place = current_place + beat
+        else:
+            fitMedia(clap_instrument, track, current_place, current_place + beat)
+            current_place = current_place + beat
     else:
         fitMedia(melody_instrument, track, current_place, current_place + beat)
-    current_place = current_place + beat
+        current_place = current_place + beat
 
 # Play the song
 play_note(1, quarter_note)
