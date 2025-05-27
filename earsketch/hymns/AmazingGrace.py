@@ -1,14 +1,14 @@
-# description: Plays Twinkle Twinkle Little Star
+# description: Plays Amazing Grace
 from earsketch import *
 
 import random
 import math
 
 # Make variable for song name
-song_name = 'Twinkle Twinkle Little Star'
+song_name = 'Amazing Grace'
 
 # Set up tempo (between 80 and 150 inclusively)
-tempo = 150
+tempo = 100
 setTempo(tempo)
 
 # Establish Parameters for rythym notes
@@ -31,19 +31,19 @@ clap_instrument = JUSTINSAHEFIL1092_CLAP_AT_TWO_CHURCH_1_WAV
 # Set up key signature (0 is key of F, 2 is key of G, etc.)
 # Note: the last parameter for the setEffect used below must
 # stay between -12 and 12.
-# So: this means the key variable must stay between -12 and 3
-key = 0
+# So: this means the key variable must stay between -12 and 0
+key = 2
 
 # Set up level of difficulty (between 0 and 12 inclusively)
-lod = 12
+lod = 6
 
 # Set up other notes used in song
-setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
-setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
-setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 9 + key) #D
-setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
-setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
-setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, -5 + key) #C (low)
+setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, -3 + key) #D (low)
+setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
 
 # Set up number of notes used in song
 num_notes = 6
@@ -69,7 +69,6 @@ print('Music Configuration Info seen below:')
 print(music_configuration)
 
 # Define the function for playing notes
-# Define the function for playing notes
 def play_note(track: int, beat: float):
     global current_place
     global random_track_numbers
@@ -86,47 +85,40 @@ def play_note(track: int, beat: float):
     else:
         fitMedia(melody_instrument, track, current_place, current_place + beat)
         current_place = current_place + beat
-        
+
 # Play the song
 play_note(1, quarter_note)
-play_note(1, quarter_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
-play_note(3, quarter_note)
-play_note(3, quarter_note)
 play_note(2, half_note)
+play_note(3, eighth_note)
+play_note(2, eighth_note)
+play_note(3, half_note)
 play_note(4, quarter_note)
-play_note(4, quarter_note)
-play_note(5, quarter_note)
-play_note(5, quarter_note)
-play_note(6, quarter_note)
-play_note(6, quarter_note)
-play_note(1, half_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
-play_note(4, quarter_note)
-play_note(4, quarter_note)
-play_note(5, quarter_note)
-play_note(5, quarter_note)
-play_note(6, half_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
-play_note(4, quarter_note)
-play_note(4, quarter_note)
-play_note(5, quarter_note)
-play_note(5, quarter_note)
-play_note(6, half_note)
-play_note(1, quarter_note)
-play_note(1, quarter_note)
-play_note(2, quarter_note)
-play_note(2, quarter_note)
-play_note(3, quarter_note)
-play_note(3, quarter_note)
 play_note(2, half_note)
-play_note(4, quarter_note)
-play_note(4, quarter_note)
 play_note(5, quarter_note)
-play_note(5, quarter_note)
-play_note(6, quarter_note)
-play_note(6, quarter_note)
 play_note(1, half_note)
+play_note(1, quarter_note)
+play_note(2, half_note)
+play_note(3, eighth_note)
+play_note(2, eighth_note)
+play_note(3, half_note)
+play_note(4, quarter_note)
+play_note(6, dotted_half_note + half_note)
+play_note(3, quarter_note)
+play_note(6, dotted_quarter_note)
+play_note(3, eighth_note)
+play_note(6, eighth_note)
+play_note(3, eighth_note)
+play_note(2, half_note)
+play_note(1, quarter_note)
+play_note(5, dotted_quarter_note)
+play_note(2, eighth_note)
+play_note(2, eighth_note)
+play_note(5, eighth_note)
+play_note(1, half_note)
+play_note(1, quarter_note)
+play_note(2, half_note)
+play_note(3, eighth_note)
+play_note(2, eighth_note)
+play_note(3, half_note)
+play_note(4, quarter_note)
+play_note(2, dotted_half_note + half_note)

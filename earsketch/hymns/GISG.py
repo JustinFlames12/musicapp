@@ -8,15 +8,18 @@ import math
 song_name = 'God Is So Good'
 
 # Set up tempo (between 80 and 150 inclusively)
-tempo = 150
+tempo = 80
 setTempo(tempo)
 
 # Establish Parameters for rythym notes
 quarter_note = 0.25
 half_note = 0.5
-eighth_note = 0.25
-sixteenth_note = 0.125
+eighth_note = 0.125
+sixteenth_note = 0.0625
 whole_note = 1.0
+dotted_quarter_note = 0.375
+dotted_eighth_note = 0.1875
+dotted_half_note = 0.75
 
 # Set up measure and beat counter variable
 current_place = 1
@@ -71,7 +74,7 @@ def play_note(track: int, beat: float):
     global melody_instrument
     global clap_instrument
     if track in random_track_numbers:
-        if beat == 1.0: # If beat is a whole note
+        if beat >= 1.0: # If beat is greater than or equal to a whole note
             # Play clap for half note and add in half rest
             fitMedia(clap_instrument, track, current_place, current_place + 0.5)
             current_place = current_place + beat
