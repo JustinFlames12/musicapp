@@ -108,6 +108,20 @@ text-align: left;
   height: 100px;
 }
 
+.Earsketch{
+  text-align: left;
+  display: flex;
+  gap: 10px;
+}
+
+#Earsketch-iframe-div {
+  /* width: 100%;
+  padding: 50px 0;
+  text-align: center;
+  background-color: #e096d0;
+  margin-top: 20px; */
+  display: none;
+}
 
 .App-logo {
   height: 40vmin;

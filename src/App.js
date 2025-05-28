@@ -50,6 +50,103 @@ function App() {
     setSelectedPlaylistOption(event.target.value);
   };
 
+  var [earsketchInput, setEarsketchInput] = useState("");
+  var keySigValue = 0;
+  const [copyBtnDisabled, setIsCopyBtnDisabled] = useState(true);
+
+  const getEarsketchInput = () => {
+    
+    if(document.getElementById('key1').checked) {
+      keySigValue = -9;
+    } 
+    else if(document.getElementById('key2').checked) {
+      keySigValue = -8;
+    }
+    else if(document.getElementById('key3').checked) {
+      keySigValue = -7;
+    }
+    else if(document.getElementById('key4').checked) {
+      keySigValue = -6;
+    }
+    else if(document.getElementById('key5').checked) {
+      keySigValue = -5;
+    }
+    else if(document.getElementById('key6').checked) {
+      keySigValue = -4;
+    }
+    else if(document.getElementById('key7').checked) {
+      keySigValue = -3;
+    }
+    else if(document.getElementById('key8').checked) {
+      keySigValue = -2;
+    }
+    else if(document.getElementById('key9').checked) {
+      keySigValue = -1;
+    }
+    else if(document.getElementById('key10').checked) {
+      keySigValue = 0;
+    }
+    else if(document.getElementById('key11').checked) {
+      keySigValue = 1;
+    }
+    else if(document.getElementById('key12').checked) {
+      keySigValue = 2;
+    }
+
+    earsketchInput = `${tempoValue},${keySigValue},${lodValue}`;
+
+    var earsketchTextInput = document.getElementById("earsketchTextInput");
+
+    earsketchTextInput.value = earsketchInput;
+
+    setIsCopyBtnDisabled(false);
+    chooseRandomSong();
+
+    document.getElementById("Earsketch-iframe-div").style.display = "block";
+    document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
+  };
+
+  const handleCopy = () => {
+    var earsketchTextInput = document.getElementById("earsketchTextInput");
+    navigator.clipboard.writeText(earsketchTextInput.value).then(() => {
+      // alert(`Text copied to clipboard!\nValue: ${earsketchTextInput.value}`);
+    }).catch(err => {
+      console.error("Failed to copy text: ", err);
+    });
+  };
+
+  const chooseRandomSong = () => {
+    var songlist = ['Holy_Holy_Holy', 'Abide_With_Me', 'Amazing_Grace', 'God_Is_So_Good'];
+    var randomSongChosen = songlist[Math.floor(Math.random() * songlist.length)];
+
+    // Create output log
+    var output_log = {'timestamp': Date.now(), 'song_name': randomSongChosen, 'tempo': tempoValue, 'key': keySigValue, 
+      'level_of_difficulty': lodValue, 
+      // 'browser_information': navigator.userAgent,
+      'user_language': navigator.language};
+    // console.log(JSON.stringify(output_log));
+    output_log =  JSON.stringify(output_log);
+
+    // Save output log to 'output_data' directory
+    var output_log_filename = '';
+    Object.keys(output_log).forEach(key => {
+    output_log_filename += `${output_log[key]}_`;
+    // console.log(`Key: ${key}, Value: ${output_log[key]}`);
+    });
+    output_log_filename = output_log_filename.slice(0, -1);
+    output_log_filename += '.json';
+    console.log(output_log_filename);
+
+    // const fs = require('fs');
+    // // Save the JSON string to a file
+    // fs.writeFile(`..\\output_data\\${output_log_filename}`, output_log, (err) => {
+    //   if (err) {
+    //     console.error('Error writing file:', err);
+    //   } else {
+    //     console.log('JSON file has been saved.');
+    //   }
+    // });
+  };
 
   return (
     <div className="App">
@@ -77,7 +174,7 @@ function App() {
         <label id='keyDis8' for="key8">Eb</label><br></br>
         <input type="radio" id="key9" name="key" value="9"></input>
         <label id='keyDis9' for="key9">E</label><br></br>
-        <input type="radio" id="key10" name="key" value="10"></input>
+        <input type="radio" id="key10" name="key" value="10" defaultChecked></input>
         <label id='keyDis10' for="key10">F</label><br></br>
         <input type="radio" id="key11" name="key" value="11"></input>
         <label id='keyDis11' for="key11">Gb</label><br></br>
@@ -105,7 +202,7 @@ function App() {
         </div>
 
         <div className='Playlist'>
-         <label htmlFor="dropdown">Playlist: </label>
+         <label htmlFor="dropdown"><h5>Playlist: </h5></label>
             <select id="dropdown" value={selectedPlaylistOption} onChange={handlePlaylistChange}>
                 <option value="" disabled>Select...</option>
                 <option value="playlist1">Playlist 1</option>
@@ -118,11 +215,20 @@ function App() {
         <div className='Player'>
         <h5>Player: </h5>
           <Stack spacing={40} direction="row">
-          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success'>Play</Button>
-          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success'>Pause</Button>
-          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success'>Restart</Button>
+          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput}>Play</Button>
+          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled="true">Pause</Button>
+          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled="true">Restart</Button>
           </Stack>
         </div> 
+        <div className='Earsketch'>
+          <div>
+          <TextField id='earsketchTextInput' fullWidth label="" color="success" focused disabled="true"/>
+          </div>
+        <Button id="copyBtn" onClick={handleCopy} variant="contained" color="success" disabled={copyBtnDisabled}>Copy</Button>
+        <div id='Earsketch-iframe-div'>
+          <iframe id="Earsketch-iframe" width="600" height="54" src="https://earsketch.gatech.edu/earsketch2/?sharing=dsfo7kXjxVg-iD-Qohjnwg&embedded=true&hideCode&hideDaw"></iframe>
+        </div>
+        </div>
       </div>
       <div className='right-side'>
         <div className='Guess'>
