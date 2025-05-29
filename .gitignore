@@ -4,7 +4,7 @@
 /earsketch/audio_files
 
 # output data from front-end UI
-/output_data
+/backend/data
 
 # dependencies
 /node_modules

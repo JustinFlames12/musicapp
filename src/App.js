@@ -30,12 +30,9 @@ function App() {
     }
   };
 
-  // const Slider = () => {
-  const [tempoValue, setTempoValue] = useState(80); // Default value
+  const [tempoValue, setTempoValue] = useState(80);
   const [lodValue, setLodValue] = useState(0);
   
-  
-  // };
   const handleTempoChange = (event) => {
     setTempoValue(event.target.value);
   };
@@ -93,17 +90,30 @@ function App() {
       keySigValue = 2;
     }
 
+    chooseRandomSong();
+
     earsketchInput = `${tempoValue},${keySigValue},${lodValue}`;
-
     var earsketchTextInput = document.getElementById("earsketchTextInput");
-
     earsketchTextInput.value = earsketchInput;
 
     setIsCopyBtnDisabled(false);
-    chooseRandomSong();
+    
 
     document.getElementById("Earsketch-iframe-div").style.display = "block";
     document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
+
+    let iframe = document.getElementById('Earsketch-iframe'); // Select the iframe
+    // Get the document of the iframe
+    // let iframeDoc = iframe.contentWindow.document;
+
+    // Run JavaScript inside the iframe's context
+    // iframeDoc.body.style.backgroundColor = "lightblue"; // Changes background inside iframe
+
+    // document.querySelector('button[title="Play"]').click();
+    // document.querySelector('input.form-input.w-full').value = '100,-2,0';
+    // document.querySelector('input[value="OKAY"]').click(); //document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, code: 'Enter' }));
+    // document.querySelector('button[title="Play"]').click();
+
   };
 
   const handleCopy = () => {
@@ -115,7 +125,7 @@ function App() {
     });
   };
 
-  const chooseRandomSong = () => {
+  const chooseRandomSong = async () => {
     var songlist = ['Holy_Holy_Holy', 'Abide_With_Me', 'Amazing_Grace', 'God_Is_So_Good'];
     var randomSongChosen = songlist[Math.floor(Math.random() * songlist.length)];
 
@@ -124,30 +134,50 @@ function App() {
       'level_of_difficulty': lodValue, 
       // 'browser_information': navigator.userAgent,
       'user_language': navigator.language};
-    // console.log(JSON.stringify(output_log));
+
+    var output_log_original = output_log;
     output_log =  JSON.stringify(output_log);
 
-    // Save output log to 'output_data' directory
+    // Save output log to Downloads directory
     var output_log_filename = '';
-    Object.keys(output_log).forEach(key => {
-    output_log_filename += `${output_log[key]}_`;
-    // console.log(`Key: ${key}, Value: ${output_log[key]}`);
+    // console.log(output_log_original);
+    // for (const key in output_log_original) {
+    // if (output_log_original.hasOwnProperty(key)) {
+    //   console.log(output_log_original[key]); 
+    //   output_log_filename += `${output_log_original[key]}_`;
+    // }};
+    // output_log_filename = output_log_filename.slice(0, -1);
+    // output_log_filename += '.json';
+    // console.log(output_log_filename);
+
+    // const jsonString = JSON.stringify(output_log);
+    // const blob = new Blob([jsonString], { type: "application/json" });
+    // const url = URL.createObjectURL(blob);
+
+    // const a = document.createElement("a");
+    // a.href = url;
+    // a.download = output_log_filename;
+    // document.body.appendChild(a);
+    // a.click();
+    // document.body.removeChild(a);
+
+    // URL.revokeObjectURL(url);
+
+      try {
+    const response = await fetch("http://localhost:5000/save-json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(output_log_original),
     });
-    output_log_filename = output_log_filename.slice(0, -1);
-    output_log_filename += '.json';
-    console.log(output_log_filename);
 
-    // const fs = require('fs');
-    // // Save the JSON string to a file
-    // fs.writeFile(`..\\output_data\\${output_log_filename}`, output_log, (err) => {
-    //   if (err) {
-    //     console.error('Error writing file:', err);
-    //   } else {
-    //     console.log('JSON file has been saved.');
-    //   }
-    // });
+    const result = await response.text();
+    alert(result); // Show success or error message
+  } catch (error) {
+    console.error("Error sending JSON:", error);
+  }
   };
-
   return (
     <div className="App">
       <h2>Guess That Song (Front End UI)</h2>
@@ -205,8 +235,8 @@ function App() {
          <label htmlFor="dropdown"><h5>Playlist: </h5></label>
             <select id="dropdown" value={selectedPlaylistOption} onChange={handlePlaylistChange}>
                 <option value="" disabled>Select...</option>
-                <option value="playlist1">Playlist 1</option>
-                <option value="playlist2">Playlist 2</option>
+                <option value="playlist1">Hymns</option>
+                <option value="playlist2">Nursery Rhymes</option>
                 <option value="playlist3">Playlist 3</option>
             </select>
         </div>
@@ -245,15 +275,10 @@ function App() {
         <div>
         <Button variant="contained" size='large' color='success'>Submit</Button>
         </div>
-        
-        
       </div>
-
-
       </div>
       </header>
-    </div>
-    
+    </div>  
   );
 }
 
