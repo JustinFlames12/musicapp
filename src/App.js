@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
+import SnackbarContent from '@mui/material/SnackbarContent';
 
 function App() {
   const toggleKeyName = () => {
@@ -50,6 +51,8 @@ function App() {
   var [earsketchInput, setEarsketchInput] = useState("");
   var keySigValue = 0;
   const [copyBtnDisabled, setIsCopyBtnDisabled] = useState(true);
+  var [randomSongChosen, setRandomSongChosen] = useState("");
+  var randomSongChosenNumber = 0;
 
   const getEarsketchInput = () => {
     
@@ -91,14 +94,11 @@ function App() {
     }
 
     chooseRandomSong();
-
-    earsketchInput = `${tempoValue},${keySigValue},${lodValue}`;
+    earsketchInput = `${tempoValue},${keySigValue},${lodValue},${randomSongChosenNumber}`;
     var earsketchTextInput = document.getElementById("earsketchTextInput");
     earsketchTextInput.value = earsketchInput;
 
     setIsCopyBtnDisabled(false);
-    
-
     document.getElementById("Earsketch-iframe-div").style.display = "block";
     document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
 
@@ -125,45 +125,83 @@ function App() {
     });
   };
 
-  const chooseRandomSong = async () => {
-    var songlist = ['Holy_Holy_Holy', 'Abide_With_Me', 'Amazing_Grace', 'God_Is_So_Good'];
-    var randomSongChosen = songlist[Math.floor(Math.random() * songlist.length)];
+  const levenshteinDistance = (str1, str2) => {
+    const len1 = str1.length;
+    const len2 = str2.length;
+    const dp = Array(len1 + 1).fill(null).map(() => Array(len2 + 1).fill(null));
+
+    for (let i = 0; i <= len1; i++) {
+        for (let j = 0; j <= len2; j++) {
+            if (i === 0) {
+                dp[i][j] = j;
+            } else if (j === 0) {
+                dp[i][j] = i;
+            } else {
+                dp[i][j] = Math.min(
+                    dp[i - 1][j] + 1,
+                    dp[i][j - 1] + 1,
+                    dp[i - 1][j - 1] + (str1[i - 1] === str2[j - 1] ? 0 : 1)
+                );
+            }
+        }
+    }
+    return dp[len1][len2];
+}
+
+  const getScore = async () => {
+    var guessTextInput = document.getElementById("guessTextField");
+    var randomSongChosenClean = randomSongChosen.replaceAll('_', ' ').toUpperCase();
+    var guessTextInputClean = guessTextInput.value.toUpperCase();
+
+    // Compare user's guess against song title
+    const maxLen = Math.max(randomSongChosenClean.length, guessTextInputClean.length);
+    const distance = levenshteinDistance(randomSongChosenClean, guessTextInputClean);
+    const guessScore = ((1 - distance / maxLen) * 100).toFixed(2);
 
     // Create output log
-    var output_log = {'timestamp': Date.now(), 'song_name': randomSongChosen, 'tempo': tempoValue, 'key': keySigValue, 
+    var score_output_log = {'timestamp': Date.now(), 'tempo': tempoValue, 'key': keySigValue, 
       'level_of_difficulty': lodValue, 
-      // 'browser_information': navigator.userAgent,
-      'user_language': navigator.language};
+      'browser_information': navigator.userAgent,
+      'user_language': navigator.language, 'random_song_chosen': randomSongChosen, 
+      'random_song_chosen_number': randomSongChosenNumber, 'user_guess': guessTextInput.value,
+      'user_score': guessScore};
+    
+    var score_output_log_original = score_output_log;
+    score_output_log =  JSON.stringify(score_output_log);
+    alert(`Guess: ${guessTextInput.value}\nSong Title: ${randomSongChosen}\nScore: ${guessScore}`);
+    try {
+    const response = await fetch("http://localhost:5000/save-json-2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(score_output_log_original),
+    });
+    const result = await response.text();
+    alert(result); // Show success or error message
+  } catch (error) {
+    console.error("Error sending JSON:", error);
+  }
+  };
+
+  const chooseRandomSong = async () => {
+    var songlist = {
+      0: 'Holy_Holy_Holy', 1: 'Abide_With_Me', 2: 'Amazing_Grace', 3: 'God_Is_So_Good', 4: 'Fairest_Lord_Jesus',
+      5: 'Crown_Him_With_Many_Crowns'
+    }
+    randomSongChosenNumber = Math.floor(Math.random() * Object.keys(songlist).length);
+    // randomSongChosen = songlist[randomSongChosenNumber];
+    setRandomSongChosen(songlist[randomSongChosenNumber]);
+    
+    // Create output log
+    var output_log = {'timestamp': Date.now(), 'tempo': tempoValue, 'key': keySigValue, 
+      'level_of_difficulty': lodValue, 
+      'browser_information': navigator.userAgent,
+      'user_language': navigator.language, 'random_song_chosen': randomSongChosen, 'random_song_chosen_number': randomSongChosenNumber};
 
     var output_log_original = output_log;
     output_log =  JSON.stringify(output_log);
-
-    // Save output log to Downloads directory
-    var output_log_filename = '';
-    // console.log(output_log_original);
-    // for (const key in output_log_original) {
-    // if (output_log_original.hasOwnProperty(key)) {
-    //   console.log(output_log_original[key]); 
-    //   output_log_filename += `${output_log_original[key]}_`;
-    // }};
-    // output_log_filename = output_log_filename.slice(0, -1);
-    // output_log_filename += '.json';
-    // console.log(output_log_filename);
-
-    // const jsonString = JSON.stringify(output_log);
-    // const blob = new Blob([jsonString], { type: "application/json" });
-    // const url = URL.createObjectURL(blob);
-
-    // const a = document.createElement("a");
-    // a.href = url;
-    // a.download = output_log_filename;
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
-
-    // URL.revokeObjectURL(url);
-
-      try {
+  try {
     const response = await fetch("http://localhost:5000/save-json", {
       method: "POST",
       headers: {
@@ -171,7 +209,6 @@ function App() {
       },
       body: JSON.stringify(output_log_original),
     });
-
     const result = await response.text();
     alert(result); // Show success or error message
   } catch (error) {
@@ -211,26 +248,22 @@ function App() {
         <input type="radio" id="key12" name="key" value="12"></input>
         <label id='keyDis12' for="key12">G</label><br></br>
         </div>
-
         <div className='Key-Dis'>
         <h5>Key Signature (Display): </h5>
         <button id='keySigBtn' onClick={toggleKeyName}>Flats</button>
         </div>
-
         <div className='Tempo'>
         <h5>Tempo: </h5>
         <input id='Tempo-slider' type="range" min="80" max="150" value={tempoValue}
         onChange={handleTempoChange}></input>
         <p>{tempoValue}</p>
         </div>
-
         <div className='Lod'>
         <h5>Level of Difficulty: </h5>
         <input id='Lod-slider' type="range" min="0" max="12" value={lodValue}
         onChange={handleLodChange}></input>
         <p>{lodValue}</p>
         </div>
-
         <div className='Playlist'>
          <label htmlFor="dropdown"><h5>Playlist: </h5></label>
             <select id="dropdown" value={selectedPlaylistOption} onChange={handlePlaylistChange}>
@@ -240,19 +273,18 @@ function App() {
                 <option value="playlist3">Playlist 3</option>
             </select>
         </div>
-
         <br></br>
         <div className='Player'>
         <h5>Player: </h5>
           <Stack spacing={40} direction="row">
           <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput}>Play</Button>
-          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled="true">Pause</Button>
-          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled="true">Restart</Button>
+          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled={true}>Pause</Button>
+          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled={true}>Restart</Button>
           </Stack>
         </div> 
         <div className='Earsketch'>
           <div>
-          <TextField id='earsketchTextInput' fullWidth label="" color="success" focused disabled="true"/>
+          <TextField id='earsketchTextInput' fullWidth label="" color="success" focused disabled={true}/>
           </div>
         <Button id="copyBtn" onClick={handleCopy} variant="contained" color="success" disabled={copyBtnDisabled}>Copy</Button>
         <div id='Earsketch-iframe-div'>
@@ -263,7 +295,6 @@ function App() {
       <div className='right-side'>
         <div className='Guess'>
           <h5>Guess: </h5>
-          
         </div>
         <div>
           <TextField id='guessTextField' fullWidth label="Put your guess here" color="success" focused />
@@ -273,7 +304,7 @@ function App() {
           <h5>Submit: </h5>
         </div>
         <div>
-        <Button variant="contained" size='large' color='success'>Submit</Button>
+        <Button variant="contained" size='large' color='success' onClick={getScore}>Submit</Button>
         </div>
       </div>
       </div>

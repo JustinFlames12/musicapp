@@ -5,6 +5,8 @@
 
 # output data from front-end UI
 /backend/data
+/backend/requests
+/backend/submits
 
 # dependencies
 /node_modules

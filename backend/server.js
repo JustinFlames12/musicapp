@@ -18,7 +18,7 @@ app.post("/save-json", (req, res) => {
     return value.toString(16);
   });
 
-  const filePath = path.join(__dirname, "data", `${simpleUUID()}.json`);
+  const filePath = path.join(__dirname, "requests", `${simpleUUID()}.json`);
 
   // Ensure the directory exists
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -29,7 +29,31 @@ app.post("/save-json", (req, res) => {
       console.error("Error saving JSON:", err);
       return res.status(500).send("Error saving JSON file.");
     }
-    res.send("JSON file saved successfully!");
+  });
+});
+
+app.post("/save-json-2", (req, res) => {
+  const jsonData = req.body;
+
+  // Create UUID for output data filename
+  const simpleUUID = () =>
+  "xxxxxxxx_xxxx_4xxx_yxxx_xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
+    const rnd = (Math.random() * 16) | 0;
+    const value = char === "x" ? rnd : (rnd & 0x3) | 0x8;
+    return value.toString(16);
+  });
+
+  const filePath = path.join(__dirname, "submits", `${simpleUUID()}.json`);
+
+  // Ensure the directory exists
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+
+  // Write JSON data to a file
+  fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
+    if (err) {
+      console.error("Error saving JSON:", err);
+      return res.status(500).send("Error saving JSON file.");
+    }
   });
 });
 
