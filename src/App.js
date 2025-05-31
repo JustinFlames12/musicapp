@@ -46,6 +46,12 @@ function App() {
 
   const handlePlaylistChange = (event) => {
     setSelectedPlaylistOption(event.target.value);
+    if(event.target.value !== "Select..."){
+      setPlayBtnDisabled(false);
+    }
+    else{
+      setPlayBtnDisabled(true);
+    }
   };
 
   var [earsketchInput, setEarsketchInput] = useState("");
@@ -53,6 +59,8 @@ function App() {
   const [copyBtnDisabled, setIsCopyBtnDisabled] = useState(true);
   var [randomSongChosen, setRandomSongChosen] = useState("");
   var randomSongChosenNumber = 0;
+
+  var [PlayBtnDisabled, setPlayBtnDisabled] = useState(true);
 
   const getEarsketchInput = () => {
     
@@ -277,7 +285,7 @@ function App() {
         <div className='Player'>
         <h5>Player: </h5>
           <Stack spacing={40} direction="row">
-          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput}>Play</Button>
+          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput} disabled={PlayBtnDisabled}>Play</Button>
           <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled={true}>Pause</Button>
           <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled={true}>Restart</Button>
           </Stack>
