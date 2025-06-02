@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # audio files
-/earsketch/audio_files
+/src/audio_files
 
 # output data from front-end UI
 /backend/data

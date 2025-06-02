@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState } from "react";
+import React, { useState} from "react";
 // import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -9,6 +9,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SnackbarContent from '@mui/material/SnackbarContent';
+import path from 'path-browserify';
 
 function App() {
   const toggleKeyName = () => {
@@ -33,6 +34,7 @@ function App() {
 
   const [tempoValue, setTempoValue] = useState(80);
   const [lodValue, setLodValue] = useState(0);
+  const fs = require('fs');
   
   const handleTempoChange = (event) => {
     setTempoValue(event.target.value);
@@ -59,10 +61,95 @@ function App() {
   const [copyBtnDisabled, setIsCopyBtnDisabled] = useState(true);
   var [randomSongChosen, setRandomSongChosen] = useState("");
   var randomSongChosenNumber = 0;
-
   var [PlayBtnDisabled, setPlayBtnDisabled] = useState(true);
+  var [PauseBtnDisabled, setPauseBtnDisabled] = useState(true);
+  var [RestartBtnDisabled, setRestartBtnDisabled] = useState(true);
 
-  const getEarsketchInput = () => {
+  var songlist = {
+      0: 'Holy_Holy_Holy', 1: 'Abide_With_Me', 2: 'Amazing_Grace', 3: 'God_Is_So_Good', 4: 'Fairest_Lord_Jesus',
+      5: 'Crown_Him_With_Many_Crowns'
+    }
+
+var [audio, setAudio] = useState(new Audio(""));
+const [audioInstance, setAudioInstance] = useState(null);
+
+const [isPlaying, setIsPlaying] = useState(false);
+
+const [audioFile, setAudioFile] = useState("/audio/file1.mp3");
+
+const playAudio = (src) => {
+  console.log(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+  // const audio = new Audio(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+  if(audioInstance){
+    audioInstance.play();
+  }
+  else{
+    audio = new Audio(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+    audio.load();
+    audio.play();
+    setAudioInstance(audio); 
+  }
+
+};
+
+const pauseAudio = () => {
+  // if(audio.paused == false){
+  console.log("Pausing audio");
+  audioInstance.pause();
+  // }
+  setPlayBtnDisabled(false);
+  setPauseBtnDisabled(true);
+  setRestartBtnDisabled(false);
+};
+
+const audios = {
+  "Abide_With_Me_80_0_0": require("./audio_files/Abide_With_Me_80_0_0.mp3"),
+  "Amazing_Grace_80_0_0": require("./audio_files/Amazing_Grace_80_0_0.mp3"),
+  "Crown_Him_With_Many_Crowns_80_0_0": require("./audio_files/Crown_Him_With_Many_Crowns_80_0_0.mp3"),
+  "Fairest_Lord_Jesus_80_0_0": require("./audio_files/Fairest_Lord_Jesus_80_0_0.mp3"),
+  "God_Is_So_Good_80_0_0": require("./audio_files/God_Is_So_Good_80_0_0.mp3"),
+  "Holy_Holy_Holy_80_0_0": require("./audio_files/Holy_Holy_Holy_80_0_0.mp3")
+};
+
+var [filePath, setFilePath] = useState(""); // Example file path
+const [fileExists, setFileExists] = useState(null);
+ const checkFile = async () => {
+  // console.log(JSON.stringify({ filePath }));
+    try {
+      const response = await fetch("http://localhost:5000/check-song", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        
+        body: JSON.stringify({ filePath }),
+      });
+
+      const data = await response.json();
+    
+      if(data === true){
+        console.log('File exists.');
+        setAudioFile(filePath);
+        // console.log(filePath);
+        document.getElementById("Earsketch-iframe-div").style.display = "none";
+        document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
+        setPlayBtnDisabled(true);
+        setPauseBtnDisabled(false);
+        setRestartBtnDisabled(false);
+        playAudio(filePath);
+      }
+      else{
+        console.log('File does not exist. Using Earsketch audio.');
+        setIsCopyBtnDisabled(false);
+        document.getElementById("Earsketch-iframe-div").style.display = "block";
+        document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
+      }
+    } catch (error) {
+      console.error("Error checking file:", error);
+    }
+  };
+
+  const getEarsketchInput = async () => {
     
     if(document.getElementById('key1').checked) {
       keySigValue = -9;
@@ -106,11 +193,11 @@ function App() {
     var earsketchTextInput = document.getElementById("earsketchTextInput");
     earsketchTextInput.value = earsketchInput;
 
-    setIsCopyBtnDisabled(false);
-    document.getElementById("Earsketch-iframe-div").style.display = "block";
-    document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
-
-    let iframe = document.getElementById('Earsketch-iframe'); // Select the iframe
+    var songFile = path.join(__dirname, 'src', 'audio_files', `${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}.mp3`);
+    setFilePath(songFile);
+    filePath = songFile;
+    checkFile();
+    
     // Get the document of the iframe
     // let iframeDoc = iframe.contentWindow.document;
 
@@ -193,10 +280,7 @@ function App() {
   };
 
   const chooseRandomSong = async () => {
-    var songlist = {
-      0: 'Holy_Holy_Holy', 1: 'Abide_With_Me', 2: 'Amazing_Grace', 3: 'God_Is_So_Good', 4: 'Fairest_Lord_Jesus',
-      5: 'Crown_Him_With_Many_Crowns'
-    }
+    
     randomSongChosenNumber = Math.floor(Math.random() * Object.keys(songlist).length);
     // randomSongChosen = songlist[randomSongChosenNumber];
     setRandomSongChosen(songlist[randomSongChosenNumber]);
@@ -285,9 +369,10 @@ function App() {
         <div className='Player'>
         <h5>Player: </h5>
           <Stack spacing={40} direction="row">
-          <Button variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput} disabled={PlayBtnDisabled}>Play</Button>
-          <Button variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled={true}>Pause</Button>
-          <Button variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled={true}>Restart</Button>
+          
+          <Button id='PlayBtn' variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput} disabled={PlayBtnDisabled}>Play</Button>
+          <Button id='PauseBtn' variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled={PauseBtnDisabled} onClick={pauseAudio}>Pause</Button>
+          <Button id='RestartBtn' variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled={RestartBtnDisabled}>Restart</Button>
           </Stack>
         </div> 
         <div className='Earsketch'>

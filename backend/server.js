@@ -7,6 +7,10 @@ const app = express();
 app.use(express.json()); // Middleware to parse JSON
 app.use(cors());
 
+const checkFileExists = (filePath) => {
+  return fs.existsSync(filePath);
+};
+
 app.post("/save-json", (req, res) => {
   const jsonData = req.body;
 
@@ -55,6 +59,16 @@ app.post("/save-json-2", (req, res) => {
       return res.status(500).send("Error saving JSON file.");
     }
   });
+});
+
+app.post("/check-song", (req, res) =>{
+console.log(req.body);
+const filePath = path.join(__dirname, '..', req.body.filePath); 
+console.log(filePath);
+console.log(checkFileExists(filePath) ? 'File exists' : 'File does not exist');
+
+// const exists = fs.existsSync(absolutePath);
+res.json(checkFileExists(filePath));
 });
 
 app.listen(5000, () => console.log("Server running on port 5000"));

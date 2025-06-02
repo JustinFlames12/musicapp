@@ -10,6 +10,7 @@ NOTE: The following commands need to be ran to run the application:
 ### `npm install react-bootstrap`
 ### `npm install @mui/material`
 ### `npm install @mui/icons-material`
+### `npm install path-browserify`
 
 In the project directory, you can run:
 
