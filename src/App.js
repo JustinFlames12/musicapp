@@ -49,10 +49,10 @@ function App() {
   const handlePlaylistChange = (event) => {
     setSelectedPlaylistOption(event.target.value);
     if(event.target.value !== "Select..."){
-      setPlayBtnDisabled(false);
+      setLoadSongBtnDisabled(false);
     }
     else{
-      setPlayBtnDisabled(true);
+      setLoadSongBtnDisabled(true);
     }
   };
 
@@ -60,47 +60,63 @@ function App() {
   var keySigValue = 0;
   const [copyBtnDisabled, setIsCopyBtnDisabled] = useState(true);
   var [randomSongChosen, setRandomSongChosen] = useState("");
-  var randomSongChosenNumber = 0;
+  // var randomSongChosenNumber = 0;
+  var [randomSongChosenNumber, setRandomChosenNumber] = useState(0);
   var [PlayBtnDisabled, setPlayBtnDisabled] = useState(true);
   var [PauseBtnDisabled, setPauseBtnDisabled] = useState(true);
   var [RestartBtnDisabled, setRestartBtnDisabled] = useState(true);
+  var [LoadSongBtnDisabled, setLoadSongBtnDisabled] = useState(true);
 
-  var songlist = {
-      0: 'Holy_Holy_Holy', 1: 'Abide_With_Me', 2: 'Amazing_Grace', 3: 'God_Is_So_Good', 4: 'Fairest_Lord_Jesus',
-      5: 'Crown_Him_With_Many_Crowns'
+  var songlist = { 1:{0: 'Holy_Holy_Holy', 1: 'Abide_With_Me', 2: 'Amazing_Grace', 3: 'God_Is_So_Good', 4: 'Fairest_Lord_Jesus',
+      5: 'Crown_Him_With_Many_Crowns'},
+      2: {0: 'Clementine', 1: 'Go_Tell_Aunt_Rhody', 2: 'Hot_Cross_Buns', 3: 'Mary_Had_A_Little_Lamb', 4: 'Twinkle_Twinkle_Little_Star'}
     }
 
 var [audio, setAudio] = useState(new Audio(""));
-const [audioInstance, setAudioInstance] = useState(null);
+var [audioInstance, setAudioInstance] = useState(null);
 
 const [isPlaying, setIsPlaying] = useState(false);
 
 const [audioFile, setAudioFile] = useState("/audio/file1.mp3");
 
-const playAudio = (src) => {
-  console.log(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+const playAudio = () => {
+  // console.log(audios[`${songlist[document.getElementById("dropdown").value][randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+  // console.log(randomSongChosenNumber);
   // const audio = new Audio(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
-  if(audioInstance){
+  if(audioInstance !== null){
     audioInstance.play();
   }
   else{
-    audio = new Audio(audios[`${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}`]);
+    audio = new Audio(audios[`${randomSongChosen}_${tempoValue}_${keySigValue}_${lodValue}`]);
     audio.load();
     audio.play();
     setAudioInstance(audio); 
   }
-
+  setPlayBtnDisabled(true);
+  setPauseBtnDisabled(false);
+  setRestartBtnDisabled(false);
+  audio.onended = () => {
+  setPlayBtnDisabled(false);
+  setPauseBtnDisabled(true);
+  setRestartBtnDisabled(true);
+  }
 };
 
 const pauseAudio = () => {
-  // if(audio.paused == false){
-  console.log("Pausing audio");
   audioInstance.pause();
-  // }
   setPlayBtnDisabled(false);
   setPauseBtnDisabled(true);
   setRestartBtnDisabled(false);
 };
+
+const restartAudio = () => {
+  audioInstance.pause();
+  setAudioInstance(null);
+  audioInstance = null;
+  if(PlayBtnDisabled){
+    playAudio();
+  }
+}
 
 const audios = {
   "Abide_With_Me_80_0_0": require("./audio_files/Abide_With_Me_80_0_0.mp3"),
@@ -108,13 +124,18 @@ const audios = {
   "Crown_Him_With_Many_Crowns_80_0_0": require("./audio_files/Crown_Him_With_Many_Crowns_80_0_0.mp3"),
   "Fairest_Lord_Jesus_80_0_0": require("./audio_files/Fairest_Lord_Jesus_80_0_0.mp3"),
   "God_Is_So_Good_80_0_0": require("./audio_files/God_Is_So_Good_80_0_0.mp3"),
-  "Holy_Holy_Holy_80_0_0": require("./audio_files/Holy_Holy_Holy_80_0_0.mp3")
+  "Holy_Holy_Holy_80_0_0": require("./audio_files/Holy_Holy_Holy_80_0_0.mp3"),
+  "Clementine_80_0_0": require("./audio_files/Clementine_80_0_0.mp3"),
+  "Go_Tell_Aunt_Rhody_80_0_0": require("./audio_files/Go_Tell_Aunt_Rhody_80_0_0.mp3"),
+  "Hot_Cross_Buns_80_0_0": require("./audio_files/Hot_Cross_Buns_80_0_0.mp3"),
+  "Mary_Had_A_Little_Lamb_80_0_0": require("./audio_files/Mary_Had_A_Little_Lamb_80_0_0.mp3"),
+  "Twinkle_Twinkle_Little_Star_80_0_0": require("./audio_files/Twinkle_Twinkle_Little_Star_80_0_0.mp3"),
+
 };
 
 var [filePath, setFilePath] = useState(""); // Example file path
 const [fileExists, setFileExists] = useState(null);
  const checkFile = async () => {
-  // console.log(JSON.stringify({ filePath }));
     try {
       const response = await fetch("http://localhost:5000/check-song", {
         method: "POST",
@@ -133,16 +154,19 @@ const [fileExists, setFileExists] = useState(null);
         // console.log(filePath);
         document.getElementById("Earsketch-iframe-div").style.display = "none";
         document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
-        setPlayBtnDisabled(true);
-        setPauseBtnDisabled(false);
-        setRestartBtnDisabled(false);
-        playAudio(filePath);
+        setPlayBtnDisabled(false);
+        setPauseBtnDisabled(true);
+        setRestartBtnDisabled(true);
+        // playAudio(filePath);
       }
       else{
         console.log('File does not exist. Using Earsketch audio.');
         setIsCopyBtnDisabled(false);
         document.getElementById("Earsketch-iframe-div").style.display = "block";
         document.getElementById('Earsketch-iframe').src = document.getElementById('Earsketch-iframe').src;
+        setPlayBtnDisabled(true);
+        setPauseBtnDisabled(true);
+        setRestartBtnDisabled(true);
       }
     } catch (error) {
       console.error("Error checking file:", error);
@@ -189,14 +213,21 @@ const [fileExists, setFileExists] = useState(null);
     }
 
     chooseRandomSong();
-    earsketchInput = `${tempoValue},${keySigValue},${lodValue},${randomSongChosenNumber}`;
+    earsketchInput = `${tempoValue},${keySigValue},${lodValue},${randomSongChosenNumber},${document.getElementById("dropdown").value}`;
     var earsketchTextInput = document.getElementById("earsketchTextInput");
     earsketchTextInput.value = earsketchInput;
 
-    var songFile = path.join(__dirname, 'src', 'audio_files', `${songlist[randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}.mp3`);
+    var songFile = path.join(__dirname, 'src', 'audio_files', `${songlist[document.getElementById("dropdown").value][randomSongChosenNumber]}_${tempoValue}_${keySigValue}_${lodValue}.mp3`);
     setFilePath(songFile);
     filePath = songFile;
     checkFile();
+
+    if(audioInstance){
+    audioInstance.pause();
+    setAudioInstance(null);
+    audioInstance = null;
+    }
+    
     
     // Get the document of the iframe
     // let iframeDoc = iframe.contentWindow.document;
@@ -281,9 +312,13 @@ const [fileExists, setFileExists] = useState(null);
 
   const chooseRandomSong = async () => {
     
-    randomSongChosenNumber = Math.floor(Math.random() * Object.keys(songlist).length);
-    // randomSongChosen = songlist[randomSongChosenNumber];
-    setRandomSongChosen(songlist[randomSongChosenNumber]);
+    // randomSongChosenNumber = Math.floor(Math.random() * Object.keys(songlist).length);
+    setRandomChosenNumber(Math.floor(Math.random() * Object.keys(songlist[document.getElementById("dropdown").value]).length));
+    console.log(randomSongChosenNumber);
+    // console.log(Object.keys(songlist[document.getElementById("dropdown").value]).length);
+    randomSongChosen = songlist[document.getElementById("dropdown").value][randomSongChosenNumber];
+    setRandomSongChosen(songlist[document.getElementById("dropdown").value][randomSongChosenNumber]);
+    console.log(randomSongChosen);
     
     // Create output log
     var output_log = {'timestamp': Date.now(), 'tempo': tempoValue, 'key': keySigValue, 
@@ -360,19 +395,18 @@ const [fileExists, setFileExists] = useState(null);
          <label htmlFor="dropdown"><h5>Playlist: </h5></label>
             <select id="dropdown" value={selectedPlaylistOption} onChange={handlePlaylistChange}>
                 <option value="" disabled>Select...</option>
-                <option value="playlist1">Hymns</option>
-                <option value="playlist2">Nursery Rhymes</option>
-                <option value="playlist3">Playlist 3</option>
+                <option value="1">Hymns</option>
+                <option value="2">Nursery Rhymes</option>
             </select>
         </div>
         <br></br>
         <div className='Player'>
         <h5>Player: </h5>
           <Stack spacing={40} direction="row">
-          
-          <Button id='PlayBtn' variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={getEarsketchInput} disabled={PlayBtnDisabled}>Play</Button>
+          <Button id='LoadSongBtn' variant="contained" size='large' endIcon={<PlayArrowIcon />} color='primary' onClick={getEarsketchInput} disabled={LoadSongBtnDisabled}>Load Song</Button>
+          <Button id='PlayBtn' variant="contained" size='large' endIcon={<PlayArrowIcon />} color='success' onClick={playAudio} disabled={PlayBtnDisabled}>Play</Button>
           <Button id='PauseBtn' variant="contained" size='large' endIcon={<PauseIcon />} color='success' disabled={PauseBtnDisabled} onClick={pauseAudio}>Pause</Button>
-          <Button id='RestartBtn' variant="contained" size='large' endIcon={<ReplayIcon />} color='success' disabled={RestartBtnDisabled}>Restart</Button>
+          <Button id='RestartBtn' variant="contained" size='large' endIcon={<ReplayIcon />} color='success' onClick={restartAudio} disabled={RestartBtnDisabled}>Restart</Button>
           </Stack>
         </div> 
         <div className='Earsketch'>

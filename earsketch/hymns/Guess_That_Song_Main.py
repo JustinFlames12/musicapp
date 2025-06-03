@@ -5,18 +5,21 @@ import random
 import math
 import datetime
 
+# Initialize amount of songs in the song bank
+song_bank_amount = {1: 6, 2: 5}
+
 # Ask user to pass in configuration string from front-end
 invalid_message = ""
 while True:    
-    user_config = readInput("{} Provide the following info (tempo,key,level_of_difficulty) seperated by commas (example: 100,-2,0)".format(invalid_message))
+    user_config = readInput("{} Provide the following info (tempo,key,level_of_difficulty,random_song_number,playlist_number) seperated by commas (example: 100,-2,0,0,1)".format(invalid_message))
     user_config = user_config.split(',') # Split out the values from the user's configuration string
     try:
-        user_config = [int(value) for value in user_config] # Change the values from user's configuration string into integers
-        if user_config[0] < 80 or user_config[0] > 150 or user_config[1] < -12 or user_config[1] > 3 or user_config[2] < 0 or user_config[2] > 12: # Check to see that values passed from configuration are valid
+        user_config = [int(value) for value in user_config] # Change the values from user's configuration string into integers    
+        if user_config[0] < 80 or user_config[0] > 150 or user_config[1] < -12 or user_config[1] > 3 or user_config[2] < 0 or user_config[2] > 12 or user_config[3] > song_bank_amount[user_config[4]] or user_config[4] < 1 or user_config[4] > 2: # Check to see that values passed from configuration are valid
             raise Exception("Invalid input.")
         break
     except:
-        invalid_message = "Invalid Input. Please ensure you're passing in the correct information.\n"
+        invalid_message = "Invalid Input. Please ensure you're passing in the correct information."
 
 # Set up tempo (between 80 and 150 inclusively)
 tempo = user_config[0]
@@ -103,7 +106,8 @@ def display_music_configuration():
         'level_of_difficulty': lod,
         'random_track_numbers_taken_out': random_track_numbers,
         'number_of_notes': num_notes,
-        'timestamp': datetime.datetime.now()
+        'timestamp_date': datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        'timestamp': datetime.datetime.now().timestamp()
     }
     print('Music Configuration Info seen below:')
     print(music_configuration)
@@ -291,7 +295,433 @@ def Amazing_Grace():
     play_note(4, quarter_note)
     play_note(2, dotted_half_note + half_note)
 
+def Fairest_Lord_Jesus():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Fairest Lord Jesus'
+    # Set up number of notes used in song
+    num_notes = 8
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, -1 + key) #E
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    setEffect(7, PITCHSHIFT, PITCHSHIFT_SHIFT, 12 + key) #F (high)
+    setEffect(8, PITCHSHIFT, PITCHSHIFT_SHIFT, 9 + key) #D
+    
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, half_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(1, half_note)
+    play_note(4, dotted_quarter_note)
+    play_note(4, eighth_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, half_note)
+    play_note(6, half_note)
+    play_note(7, quarter_note)
+    play_note(8, quarter_note)
+    play_note(6, half_note)
+    play_note(5, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, half_note)
+    play_note(4, half_note)
+    play_note(2, whole_note)
+    play_note(6, half_note)
+    play_note(8, quarter_note)
+    play_note(6, quarter_note)
+    play_note(6, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, half_note)
+    play_note(5, half_note)
+    play_note(6, quarter_note)
+    play_note(5, quarter_note)
+    play_note(5, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(6, quarter_note)
+    play_note(5, quarter_note)
+    play_note(4, half_note)
+    play_note(2, half_note)
+    play_note(1, whole_note)
+
+def Crown_Him_With_Many_Crowns():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Crown Him With Many Crowns'
+    # Set up number of notes used in song
+    num_notes = 9
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 9 + key) #D
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 6 + key) #B
+    setEffect(7, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(8, PITCHSHIFT, PITCHSHIFT_SHIFT, 12 + key) #F (high)
+    setEffect(9, PITCHSHIFT, PITCHSHIFT_SHIFT, 11 + key) #E
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, quarter_note)
+    play_note(1, eighth_note)
+    play_note(1, eighth_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, dotted_half_note)
+    play_note(3, quarter_note)
+    play_note(4, quarter_note)
+    play_note(1, quarter_note)
+    play_note(5, quarter_note)
+    play_note(2, quarter_note)
+    play_note(7, dotted_half_note)
+    play_note(7, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(3, quarter_note)
+    play_note(4, quarter_note)
+    play_note(6, quarter_note)
+    play_note(2, eighth_note)
+    play_note(7, eighth_note)
+    play_note(4, quarter_note)
+    play_note(8, quarter_note)
+    play_note(9, quarter_note)
+    play_note(8, quarter_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(4, dotted_half_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(2, quarter_note)
+    play_note(7, quarter_note)
+    play_note(1, quarter_note)
+    play_note(3, dotted_half_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(6, quarter_note)
+    play_note(2, quarter_note)
+    play_note(7, quarter_note)
+    play_note(9, dotted_half_note)
+    play_note(9, quarter_note)
+    play_note(8, dotted_quarter_note)
+    play_note(9, eighth_note)
+    play_note(3, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(7, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(2, quarter_note)
+    play_note(7, quarter_note)
+    play_note(7, quarter_note)
+    play_note(1, whole_note)
+
+def God_Is_So_Good():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'God Is So Good'
+    # Set up number of notes used in song
+    num_notes = 5
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, half_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, whole_note)
+    play_note(3, half_note)
+    play_note(3, quarter_note)
+    play_note(4, quarter_note)
+    play_note(2, whole_note)
+    play_note(2, half_note)
+    play_note(2, quarter_note)
+    play_note(5, quarter_note)
+    play_note(4, half_note)
+    play_note(3, quarter_note)
+    play_note(4, quarter_note)
+    play_note(2, half_note)
+    play_note(3, half_note)
+    play_note(1, whole_note)
+
+def Clementine():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Clementine'
+    # Set up number of notes used in song
+    num_notes = 9
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, -5 + key) #C (low)
+    setEffect(7, PITCHSHIFT, PITCHSHIFT_SHIFT, -1 + key) #E (low)
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, eighth_note)
+    play_note(1, eighth_note)
+    play_note(1, quarter_note)
+    play_note(6, quarter_note)
+    play_note(3, eighth_note)
+    play_note(3, eighth_note)
+    play_note(3, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, eighth_note)
+    play_note(3, eighth_note)
+    play_note(2, dotted_quarter_note)
+    play_note(2, eighth_note)
+    play_note(4, eighth_note)
+    play_note(3, eighth_note)
+    play_note(5, half_note)
+    play_note(5, eighth_note)
+    play_note(3, eighth_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(3, eighth_note)
+    play_note(5, eighth_note)
+    play_note(3, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, eighth_note)
+    play_note(3, eighth_note)
+    play_note(5, dotted_quarter_note)
+    play_note(6, eighth_note)
+    play_note(7, eighth_note)
+    play_note(5, eighth_note)
+    play_note(1, half_note)
+
+def Go_Tell_Aunt_Rhody():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Go Tell Aunt Rhody'
+    # Set up number of notes used in song
+    num_notes = 9
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, half_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, half_note)
+    play_note(3, half_note)
+    play_note(2, half_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, half_note)
+    play_note(5, half_note)
+    play_note(5, quarter_note)
+    play_note(4, quarter_note)
+    play_note(1, half_note)
+    play_note(1, dotted_quarter_note)
+    play_note(3, eighth_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, quarter_note)
+    play_note(1, quarter_note)
+    play_note(3, half_note)
+
+def Hot_Cross_Buns():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Hot Cross Buns'
+    # Set up number of notes used in song
+    num_notes = 3
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, half_note)
+    play_note(2, half_note)
+    play_note(3, whole_note)
+    play_note(1, half_note)
+    play_note(2, half_note)
+    play_note(3, whole_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(1, half_note)
+    play_note(2, half_note)
+    play_note(3, whole_note)
+
+def Twinkle_Twinkle_Little_Star():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Twinkle Twinkle Little Star'
+    # Set up number of notes used in song
+    num_notes = 6
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 9 + key) #D
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 5 + key) #Bb
+    setEffect(5, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(6, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+
+    
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, half_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(5, quarter_note)
+    play_note(6, quarter_note)
+    play_note(6, quarter_note)
+    play_note(1, half_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(5, quarter_note)
+    play_note(6, half_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(5, quarter_note)
+    play_note(6, half_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, half_note)
+    play_note(4, quarter_note)
+    play_note(4, quarter_note)
+    play_note(5, quarter_note)
+    play_note(5, quarter_note)
+    play_note(6, quarter_note)
+    play_note(6, quarter_note)
+    play_note(1, half_note)
+
+def Mary_Had_A_Little_Lamb():
+    global random_track_numbers
+    global num_notes
+    global song_name
+    # Make variable for song name
+    song_name = 'Mary Had A Little Lamb'
+    # Set up number of notes used in song
+    num_notes = 4
+    # Set up other notes used in song
+    setEffect(1, PITCHSHIFT, PITCHSHIFT_SHIFT, 4 + key) #A
+    setEffect(2, PITCHSHIFT, PITCHSHIFT_SHIFT, 2 + key) #G
+    setEffect(3, PITCHSHIFT, PITCHSHIFT_SHIFT, 0 + key) #F
+    setEffect(4, PITCHSHIFT, PITCHSHIFT_SHIFT, 7 + key) #C
+
+    # Randomly decide which track numbers that will be replaced with clapping sound
+    random_track_numbers = get_random_track_numbers()
+    display_music_configuration()
+    # Play the song
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, half_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, half_note)
+    play_note(1, quarter_note)
+    play_note(4, quarter_note)
+    play_note(4, half_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, quarter_note)
+    play_note(2, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(2, quarter_note)
+    play_note(1, quarter_note)
+    play_note(2, quarter_note)
+    play_note(3, half_note)
+    
 # Choose a random song to play
-song_bank = [Holy_Holy_Holy, Abide_With_Me, Amazing_Grace]
+# song_bank = [Holy_Holy_Holy, Abide_With_Me, Amazing_Grace, Fairest_Lord_Jesus, Crown_Him_With_Many_Crowns,
+            # God_Is_So_Good]
 # Randomly select and execute one function
-random.choice(song_bank)()
+# random.choice(song_bank)()
+
+song_bank = {1:{0: Holy_Holy_Holy, 1: Abide_With_Me, 2: Amazing_Grace, 3: God_Is_So_Good, 
+                4: Fairest_Lord_Jesus, 5: Crown_Him_With_Many_Crowns},
+             2: {0: Clementine, 1: Go_Tell_Aunt_Rhody, 2: Hot_Cross_Buns, 3: Mary_Had_A_Little_Lamb, 
+                 4: Twinkle_Twinkle_Little_Star}
+      }
+song_bank[user_config[4]][user_config[3]]()
